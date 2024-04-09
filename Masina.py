@@ -41,7 +41,7 @@ class Masina:
 
         :return: Acceleratia masinii în m/s^2.
         """
-        return (self.viteza_100 - 0) / self.acceleratia_km_h_0_100
+        return self.viteza_100 / self.acceleratia_km_h_0_100
 
     def timp_pana_la_viteza_maxima(self) -> float:
         """

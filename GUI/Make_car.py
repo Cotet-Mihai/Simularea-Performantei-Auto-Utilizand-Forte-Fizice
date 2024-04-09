@@ -67,7 +67,6 @@ class CreazatiMasina:
         self.lista_entry = []
 
         while self.i < 5:
-            print(self.i)
 
             self.entry = ctk.CTkEntry(
                 self.frame,
