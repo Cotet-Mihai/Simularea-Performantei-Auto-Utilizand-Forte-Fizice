@@ -1,8 +1,13 @@
 import customtkinter as ctk
 from Masina import Masina
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class CreazatiMasina:
+    """
+    Clasa pentru crearea unei interfețe grafice pentru introducerea parametrilor unei mașini și afișarea graficelor.
+    """
 
     marca = "Adauga"
     model = "Masina"
@@ -13,12 +18,20 @@ class CreazatiMasina:
 
     masina_creata = None
 
-    def __init__(self, root):
+    def __init__(self, root: ctk.CTk):
+        """
+        Inițializează interfața grafică.
+
+        :param root: Fereastra de bază CustomTkinter.
+        """
 
         self.root = root
         self.widgets()
 
-    def widgets(self):
+    def widgets(self) -> None:
+        """
+        :return: Returnează toate widget-urile necesare pentru fereastra de meniu
+        """
 
         self.frame = ctk.CTkFrame(
             self.root,
@@ -28,7 +41,7 @@ class CreazatiMasina:
 
         self.title = ctk.CTkLabel(
             self.frame,
-            text="Creaza Masina",
+            text="Creați mașina",
             font=("Inter Bold", 25)
         )
         self.title.place(anchor='n', x=150, y=25)
@@ -42,7 +55,7 @@ class CreazatiMasina:
 
         self.deceleratia = ctk.CTkSegmentedButton(
             self.frame,
-            values=["Uscat", "Umed", "Inghetat"]
+            values=["Uscat", "Umed", "Îngheţat"]
         )
         self.deceleratia.place(anchor='n', x=150, y=125)
 
@@ -50,7 +63,7 @@ class CreazatiMasina:
         self.y = 200
         self.pointer = 0
 
-        self.parametrii_list = ["Marca", "Model", "Acceleratie(de la 0 la 100Km/H)", "Viteza maxima(Km/H)", "masa(Kg)"]
+        self.parametrii_list = ["Marcă", "Model", "Accelerație(de la 0 la 100Km/H)", "Viteza maximă(Km/H)", "Masa(Kg)"]
         self.lista_entry = []
 
         while self.i < 5:
@@ -80,7 +93,7 @@ class CreazatiMasina:
 
         self.execute_button = ctk.CTkButton(
             self.frame,
-            text="Executa",
+            text="Execută",
             font=("Inter Bold", 20),
             command=self.execute_button_function
         )
@@ -105,9 +118,9 @@ class CreazatiMasina:
         self.y_2 = 200
         self.pointer_2 = 0
 
-        self.info_text_list = ["Acceleratia:", "Forta de tractiune:", "Timpul pana la viteza maxima:",
-                               "Timpul de franare de la viteza maxima:",
-                               "Distanta parcurs in frana de la viteza maxima"]
+        self.info_text_list = ["Accelerație:", "Forța de tracțiune:", "Timp până la viteza maximă:",
+                               "Timp de frânare de la viteza maximă:",
+                               "Distanța parcursă la frânare de la viteza maximă"]
         self.info_list = []
 
         while self.i_2 < 5:
@@ -125,7 +138,25 @@ class CreazatiMasina:
 
             self.info_list.append(self.info)
 
-    def execute_button_function(self):
+        self.plot_label = ctk.CTkLabel(
+            self.frame,
+            text="Afișează graficile pentru toate condițiile de drum",
+            font=('Inter SemiBold', 10),
+            text_color='green'
+        )
+
+        self.button_plot = ctk.CTkButton(
+            self.root,
+            text="Grafice",
+            font=('Inter Bold', 20),
+            command=self.show_plot
+        )
+
+    def execute_button_function(self) -> None:
+        """
+        Funcția care se execută atunci când este apăsat butonul 'Execută'.
+        Creează un obiect Mașina pe baza introducerii utilizatorului și afișează informațiile relevante.
+        """
 
         CreazatiMasina.masina_creata = Masina(self.lista_entry[0].get(), self.lista_entry[1].get(),
                                               float(self.lista_entry[2].get()),
@@ -134,6 +165,10 @@ class CreazatiMasina:
         self.full_name_car.configure(text=f'{CreazatiMasina.masina_creata.nume_complet_masina}')
 
         if self.deceleratia.get() != "":
+
+            self.plot_label.place(anchor='s', x=450, y=440)
+            self.button_plot.place(anchor='s', x=450, y=475)
+
             self.error_label.configure(text='')
 
             match self.deceleratia.get():
@@ -141,7 +176,7 @@ class CreazatiMasina:
                     CreazatiMasina.deceleratia = "Uscat"
                 case "Umed":
                     CreazatiMasina.deceleratia = "Umed"
-                case "Inghetat":
+                case "Îngheţat":
                     CreazatiMasina.deceleratia = "Zapada"
 
             self.info_list[0].configure(text=CreazatiMasina.masina_creata.get_string_acceleratia_masinii())
@@ -152,4 +187,75 @@ class CreazatiMasina:
             self.info_list[4].configure(
                 text=CreazatiMasina.masina_creata.get_string_distanta_franare(CreazatiMasina.deceleratia))
         else:
-            self.error_label.configure(text='Nu ati starea asfaltului')
+            self.error_label.configure(text='Nu ai starea asfaltului')
+
+    def show_plot(self) -> None:
+        """
+        Funcția pentru afișarea graficelor pe baza introducerii utilizatorului.
+        """
+
+        self.plot_root = ctk.CTk()
+        self.plot_root.title('Grafice')
+        self.plot_root.geometry('640x960')
+        self.plot_root.resizable(False, False)
+
+        self.frame1 = ctk.CTkFrame(
+            self.plot_root,
+            width=200, height=200
+        )
+        self.frame1.place(x=0, y=0)
+
+        self.frame2 = ctk.CTkFrame(
+            self.plot_root,
+            width=200, height=200
+        )
+        self.frame2.place(x=0, y=480)
+
+        # Obțineți timpurile de frânare pentru diferite condiții de drum
+        timp_franare_uscat = CreazatiMasina.masina_creata.timp_franare_viteza_maxima('Uscat')
+        timp_franare_umeda = CreazatiMasina.masina_creata.timp_franare_viteza_maxima('Umed')
+        timp_franare_zapada = CreazatiMasina.masina_creata.timp_franare_viteza_maxima('Zapada')
+
+        # Crearea unui nou obiect de figură și unui grafic pe această figură
+        fig, ax = plt.subplots()
+
+        # Datele pentru grafic
+        ax.plot([0, timp_franare_uscat], [CreazatiMasina.masina_creata.viteza_maxima_km_h, 0],  marker='o', label='Uscat')  # Plotează pentru drum uscat
+        ax.plot([0, timp_franare_umeda],[CreazatiMasina.masina_creata.viteza_maxima_km_h, 0],  marker='o', label='Umed')  # Plotează pentru drum umed
+        ax.plot([0, timp_franare_zapada],[CreazatiMasina.masina_creata.viteza_maxima_km_h, 0],  marker='o', label='Zapada')  # Plotează pentru drum cu zăpadă
+        ax.set_xlabel('Timp de frânare (secunde)')
+        ax.set_ylabel('Viteza (km/h)')
+        ax.set_title('Timp de frânare de la viteză maximă la 0')
+        ax.legend()  # Adaugă o legendă pentru a indica condițiile de drum
+
+        # Integrarea graficului în fereastra Tkinter
+        canvas = FigureCanvasTkAgg(fig, master=self.frame1)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+        # Obțineți timpurile de frânare pentru diferite condiții de drum
+        timp_franare_uscat2 = CreazatiMasina.masina_creata.distanta_franare('Uscat')
+        timp_franare_umeda2 = CreazatiMasina.masina_creata.distanta_franare('Umed')
+        timp_franare_zapada2 = CreazatiMasina.masina_creata.distanta_franare('Zapada')
+
+        # Crearea unui nou obiect de figură și unui grafic pe această figură
+        fig2, ax2 = plt.subplots()
+
+        # Datele pentru grafic
+        ax2.plot([0, timp_franare_uscat2], [CreazatiMasina.masina_creata.viteza_maxima_km_h, 0], marker='o',
+                 label='Uscat')  # Plotează pentru drum uscat
+        ax2.plot([0, timp_franare_umeda2], [CreazatiMasina.masina_creata.viteza_maxima_km_h, 0], marker='o',
+                 label='Umed')  # Plotează pentru drum umed
+        ax2.plot([0, timp_franare_zapada2], [CreazatiMasina.masina_creata.viteza_maxima_km_h, 0], marker='o',
+                 label='Zapada')  # Plotează pentru drum cu zăpadă
+        ax2.set_xlabel('Distanta parcursa in frânare (metri)')
+        ax2.set_ylabel('Viteza (km/h)')
+        ax2.set_title('Distanta parcursa in frânare de la viteză maximă la 0')
+        ax2.legend()  # Adaugă o legendă pentru a indica condițiile de drum
+
+        # Integrarea graficului în fereastra Tkinter
+        canvas2 = FigureCanvasTkAgg(fig2, master=self.frame2)
+        canvas2.draw()
+        canvas2.get_tk_widget().pack()
+
+        self.plot_root.mainloop()

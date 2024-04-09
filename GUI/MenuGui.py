@@ -3,13 +3,20 @@ from GUI.Make_car import CreazatiMasina
 
 
 class MenuGui:
-    def __init__(self, root):
+    """
+    Clasa pentru crearea unei interfețe grafice de meniu.
+    """
+    def __init__(self, root: ctk.CTk):
+        """
+        Inițializează interfața grafică pentru meniu.
 
-        self.root = root
+        :param root: Fereastra de bază CustomTkinter.
+        """
 
+        self.root: ctk.CTk = root
         self.widgets()
 
-    def widgets(self):
+    def widgets(self) -> None:
 
         self.title = ctk.CTkLabel(
             self.root,
@@ -38,6 +45,8 @@ class MenuGui:
         )
         self.creazati_propria_masina.place(anchor='center', x=300, y=350)
 
-    def go_to_creazati_masina(self):
-
+    def go_to_creazati_masina(self) -> None:
+        """
+        :return: Funcție pentru a naviga către interfața de creare a mașinii.
+        """
         CreazatiMasina(self.root)

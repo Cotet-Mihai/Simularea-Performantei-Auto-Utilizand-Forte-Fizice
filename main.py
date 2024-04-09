@@ -3,11 +3,12 @@ from GUI.MenuGui import MenuGui
 
 if __name__ == '__main__':
 
-    root = ctk.CTk()  # Root
+    root: ctk.CTk = ctk.CTk()  # Root
     root.geometry("600x500")  # Dimensiune fereastra
-    root.resizable(False, False)
+    root.resizable(False, False)  # Nu permitem modificarea dimensiunii ferestrei
     root.title("Proiect MCSN")
 
-    MenuGui(root)  # Apelam interfata grafica
+    # Crearea meniului și afișarea acestuia
+    MenuGui(root)
 
-    root.mainloop()  # Loop
+    root.mainloop()  # Rularea buclei de evenimente
