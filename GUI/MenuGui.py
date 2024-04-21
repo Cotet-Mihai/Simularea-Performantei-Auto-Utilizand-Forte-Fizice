@@ -17,6 +17,9 @@ class MenuGui:
         self.widgets()
 
     def widgets(self) -> None:
+        """
+        :return: Returnează toate widget-urile necesare pentru fereastra menu
+        """
 
         self.title = ctk.CTkLabel(
             self.root,

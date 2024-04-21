@@ -30,7 +30,7 @@ class CreazatiMasina:
 
     def widgets(self) -> None:
         """
-        :return: Returnează toate widget-urile necesare pentru fereastra de meniu
+        :return: Returnează toate widget-urile necesare pentru fereastra creaza masina
         """
 
         self.frame = ctk.CTkFrame(
@@ -227,7 +227,7 @@ class CreazatiMasina:
         ax.set_title('Timp de frânare de la viteză maximă la 0')
         ax.legend()  # Adaugă o legendă pentru a indica condițiile de drum
 
-        # Integrarea graficului în fereastra Tkinter
+        # Integrarea graficului în fereastra CustomTkinter
         canvas = FigureCanvasTkAgg(fig, master=self.frame1)
         canvas.draw()
         canvas.get_tk_widget().pack()
