@@ -1,5 +1,6 @@
 import customtkinter as ctk
-import Pages.colors as colors
+import database.colors as colors
+from Pages.build_car import BuildCar
 
 
 # Build Menu
@@ -61,7 +62,7 @@ class Menu:
 
     # Create your own car function
     def first_button_function(self):
-        print('First button was pressed.')
+        BuildCar(self.root).gui()
 
     # Choose a preset car function
     def second_button_function(self):

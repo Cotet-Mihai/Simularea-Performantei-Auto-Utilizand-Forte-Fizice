@@ -1,5 +1,5 @@
 import customtkinter as ctk
-import Pages.colors as colors
+import database.colors as colors
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from car import Car
@@ -195,7 +195,7 @@ class BuildCar:
             # Template for result labels
             self.result_label = ctk.CTkLabel(
                 self.show_result_frame,
-                text=f"Result: {str(self.pointer)}",
+                text="...",
                 font=('Inter SemiBold', 10),
                 height=10
             )
@@ -222,7 +222,7 @@ class BuildCar:
             width=270, height=25,
             fg_color=colors.white,
             font=('Inter Black', 15),
-            text='EXECUTE',
+            text='Graphics for all types of asphalt',
             corner_radius=30,
             text_color=colors.main_background_color,
             hover_color=colors.lightest_blue,
